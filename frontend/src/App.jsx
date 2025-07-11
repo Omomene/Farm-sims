@@ -1,35 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import DashboardLayout from './layouts/DashboardLayout';
+import Dashboard from './pages/Dashboard';
+import Fields from './pages/Fields';
+import Machines  from './pages/Machines';
+import Factories  from './pages/Factories';
+import Storage  from './pages/Storage';
+import { AppDataProvider } from './context/GlobalContext';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <AppDataProvider>
+      <BrowserRouter>
+        <Routes>
+          {/* DashboardLayout wraps these pages */}
+          <Route path="/" element={<DashboardLayout />}>
+            <Route index element={<Dashboard />} />         {/* path="/" */}
+            <Route path="fields" element={<Fields />} />
+            <Route path="storage" element={<Storage />} />
+            <Route path="factories" element={<Factories />} />
+            <Route path="machines" element={<Machines />} />
+          </Route>
+          {/* other routes if needed */}
+        </Routes>
+      </BrowserRouter>
+    </AppDataProvider>
+  );
 }
 
-export default App
+export default App;
+
