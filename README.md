@@ -1,7 +1,7 @@
 
 # Farms-simOmomene
 
-This project contains both the **frontend** and **backend** plus **db** folders.
+This project contains both the **frontend** and **backend** plus **db** folders. UPDATED WITH PATCH ANIMAL FARM!
 
 ---
 
@@ -37,7 +37,8 @@ EXIT;
 
 ### 3. Import the SQL dump
 
-> ⚠️ Use **CMD**  — not PowerShell — for this step.
+> ⚠️ Use **CMD**  — not PowerShell — for this step. You might face problems with french character encoding using terminal. 
+Best action is to load the sqldump.sql directly into MySQL workbench to avoid character encoding problems. Else,
 
 Open a new terminal in the root of the project folder, then run:
 
