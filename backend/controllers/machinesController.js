@@ -1,4 +1,4 @@
-const machinesService = require('../services/service');
+const machinesService = require('../services/machinesService');
 
 exports.getAllMachines = async (req, res) => {
   try {

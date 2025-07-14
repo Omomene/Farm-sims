@@ -1,4 +1,4 @@
-const factoriesService = require('../services/service');
+const factoriesService = require('../services/factoriesService');
 
 exports.getFactories = async (req, res) => {
   try {

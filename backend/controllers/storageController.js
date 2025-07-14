@@ -1,4 +1,4 @@
-const storageService = require('../services/service');
+const storageService = require('../services/storageService');
 
 exports.getStorageItems = async (req, res) => {
   try {

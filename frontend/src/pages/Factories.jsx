@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AppDataContext } from "../context/GlobalContext"; // adjust import path
 
-export default function Factories() {
-  const { factories, setFactories, storage, setStorage } = useContext(AppDataContext);
+function Factories() {
+  const { factories, setFactories, storageItems, setStorageItems } = useContext(AppDataContext);
   const [loading, setLoading] = useState(true);
   // Track production timers per factory id
   const [productionTimers, setProductionTimers] = useState({});
@@ -37,10 +37,8 @@ export default function Factories() {
         const timeLeft = prev[factory.id];
         if (timeLeft <= 1) {
           clearInterval(intervalId);
-          finishProduction(factory);
-          // Remove timer
-          const {[factory.id]: _, ...rest} = prev;
-          return rest;
+          // Mark as finished by setting timer to 0
+          return { ...prev, [factory.id]: 0 };
         }
         return { ...prev, [factory.id]: timeLeft - 1 };
       });
@@ -49,7 +47,7 @@ export default function Factories() {
 
   // Called when production finishes
   const finishProduction = (factory) => {
-    const producedQuantity = factory.stock; // or any logic for quantity produced
+    const producedQuantity = factory.stock;
     const newProduct = {
       id: Date.now(),
       item_name: factory.production,
@@ -57,26 +55,67 @@ export default function Factories() {
       item_type: "Produit final",
     };
 
-    // Update storage: add or increment existing product quantity
-    setStorage((prevStorage) => {
+    // Update storage in React context (UI)
+    setStorageItems((prevStorage) => {
       const index = prevStorage.findIndex((item) => item.item_name === newProduct.item_name);
       if (index !== -1) {
         const updated = [...prevStorage];
-        updated[index].quantity += newProduct.quantity;
+        const updatedItem = {
+          ...updated[index],
+          quantity: updated[index].quantity + newProduct.quantity,
+        };
+        updated[index] = updatedItem;
+
+        // 🔄 Also send the update to the backend (PUT)
+        fetch('http://localhost:5000/storage', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedItem),
+        }).catch((err) => console.error("Échec de la mise à jour du stockage :", err));
+
         return updated;
       }
+
+      // ➕ New product in storage — send POST to backend
+      fetch('http://localhost:5000/storage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newProduct),
+      }).catch((err) => console.error("Échec de l'ajout au stockage :", err));
+
       return [...prevStorage, newProduct];
     });
 
-    alert(`Production terminée pour ${factory.production}, quantité ajoutée au stockage !`);
+    // Inform the user
+    setTimeout(() => {
+      alert(`Production terminée pour ${factory.production}, quantité ajoutée au stockage !`);
+    }, 0);
 
-    // Optionally reset factory stock here or update factories state
+    // Reset factory stock to 0
     setFactories((prevFactories) =>
       prevFactories.map((f) =>
         f.id === factory.id ? { ...f, stock: 0 } : f
       )
     );
   };
+
+
+  // Effect to watch productionTimers and trigger finishProduction for finished ones
+  useEffect(() => {
+    Object.entries(productionTimers).forEach(([factoryId, timeLeft]) => {
+      if (timeLeft === 0) {
+        const factory = factories.find((f) => f.id === Number(factoryId));
+        if (factory) {
+          finishProduction(factory);
+          // Remove timer after finishing
+          setProductionTimers((prev) => {
+            const { [factoryId]: _, ...rest } = prev;
+            return rest;
+          });
+        }
+      }
+    });
+  }, [productionTimers, factories]);
 
   if (loading) return <div>Chargement des usines...</div>;
   if (!factories.length) return <div>Aucune usine trouvée.</div>;
@@ -134,6 +173,7 @@ export default function Factories() {
     </div>
   );
 }
+export default Factories;
 
 const styles = {
   container: {

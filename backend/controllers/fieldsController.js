@@ -1,4 +1,4 @@
-const fieldsService = require('../services/service');
+const fieldsService = require('../services/fieldsService');
 
 exports.getAllFields = async (req, res) => {
   try {
