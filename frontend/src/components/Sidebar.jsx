@@ -11,7 +11,7 @@ export default function Sidebar() {
       display: 'flex',
       flexDirection: 'column',
       padding: '16px 15px',
-      paddingTop: '40px',
+      paddingTop: '30px',
       boxSizing: 'border-box',
       alignItems: 'center',
       justifyContent: 'space-between',
@@ -125,6 +125,7 @@ export default function Sidebar() {
     { path: '/', icon: icons.dashboard, label: 'Dashboard' },
     { path: '/fields', icon: icons.fields, label: 'Champs' },
     { path: '/storage', icon: icons.storage, label: 'Stokage' },
+    { path: '/warehouse', icon: icons.machines, label: 'Entrepôt' },
     { path: '/factories', icon: icons.factories, label: 'Usines' },
     { path: '/machines', icon: icons.machines, label: 'Machines' },
   ];

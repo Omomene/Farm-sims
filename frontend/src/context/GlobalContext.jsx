@@ -7,6 +7,7 @@ export function AppDataProvider({ children }) {
   const [fields, setFields] = useState([]);
   const [factories, setFactories] = useState([]);
   const [storageItems, setStorageItems] = useState([]);
+  const [warehouses, setWarehouses] = useState([]);
 
   useEffect(() => {
     fetch('http://localhost:5000/machines')
@@ -21,10 +22,13 @@ export function AppDataProvider({ children }) {
     fetch('http://localhost:5000/storage')
       .then(res => res.json())
       .then(setStorageItems);
+    fetch('http://localhost:5000/warehouse')   
+      .then(res => res.json())
+      .then(setWarehouses);
   }, []);
 
   return (
-    <AppDataContext.Provider value={{ machines, fields, factories, storageItems, setMachines, setFields, setFactories, setStorageItems }}>
+    <AppDataContext.Provider value={{ machines, fields, factories, storageItems, warehouses, setMachines, setFields, setFactories, setStorageItems, setWarehouses }}>
       {children}
     </AppDataContext.Provider>
   );

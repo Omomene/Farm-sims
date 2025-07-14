@@ -5,6 +5,7 @@ import Fields from './pages/Fields';
 import Machines  from './pages/Machines';
 import Factories  from './pages/Factories';
 import Storage  from './pages/Storage';
+import Warehouse  from './pages/Warehouse';
 import { AppDataProvider } from './context/GlobalContext';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
             <Route index element={<Dashboard />} />         {/* path="/" */}
             <Route path="fields" element={<Fields />} />
             <Route path="storage" element={<Storage />} />
+            <Route path="warehouse" element={<Warehouse />} />
             <Route path="factories" element={<Factories />} />
             <Route path="machines" element={<Machines />} />
           </Route>
